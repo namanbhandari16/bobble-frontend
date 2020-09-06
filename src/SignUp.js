@@ -1,12 +1,19 @@
 import React from 'react';
-
+import {Redirect} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
+import './SignUp.css'
 class SignUp extends React.Component{
+     user ={
+
+    }
     constructor(props) {
         super(props);
         this.state = {
+            first_name:'',
+            last_name:'',
+            pic:''
         };
         this.facebookSDK = this.facebookSDK.bind(this);
-        //this.getFbUserData = this.getFbUserData.bind(this);
         this.checkLoginState = this.checkLoginState.bind(this);
       }
     facebookSDK(){
@@ -33,50 +40,116 @@ class SignUp extends React.Component{
     componentDidMount(){
         this.facebookSDK();
     }
-    getData(){
-        /*window.FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,pic'},
-    function (res) {
-        // this.setState(){
-        //     id:res.
-        // }
-        console.log(res);
-        
-    })*/
-    console.log('hello')
-    }
     
     async checkLoginState(){
-    //const res = await window.FB.getLoginStatus();
-
-        // .then(
-        //     function(response){
-        //         console.log(response)
-        //         if(response.status === 'connected')
-        //             this.getData();
-        //     }
-        // )
-        //  const response = await window.FB.getLoginStatus();
-        //  console.log(response);
         window.FB.getLoginStatus(function(response) {
           console.log(response);
-          if (response.status === 'connected') {
-            console.log(response)
-          } else{
-          window.FB.login(function(response){
-            console.log(response)
-            }, {scope: 'name,email,picture'});
-            
-          }
-        });
+        //   if (response.status === 'connected') {
+        //     console.log(response)
+        //   } else{
+          window.FB.login(function(res){
+            console.log(res)
+            window.FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,picture'},
+    function (res) {
+        console.log(res);
+        var user={
+            first_name:res.first_name,
+            last_name:res.last_name,
+            pic:res.picture.data.url
+        };
+        alert("User Logged in.\n Details in console.\nName: "+user.first_name+" "+user.last_name);
+        // return <Redirect to={{
+        //     pathname: "/home",
+        //     state: user
+        //   }}
+        // />
+        console.log('redirect');
+        return <Redirect to="/home" />
+        //this.props.history.push('/home');
+        // let history = useHistory();
+        // history.push({
+        //     pathname: '/home',
+        //     state: user
+        // });
+        
+    })}
+        );
+    });
+  
     }
     
-
     render(){
-        console.log(this.FB);
         return(
             <div>
-                <button onClick={this.checkLoginState} style={{backgroundColor:'#5890FF', color:'white', border:'none', padding:'10px', margin:'100px'}}>Sign Up with Facebook</button>
+                {/* <button onClick={this.checkLoginState} style={{backgroundColor:'#5890FF', color:'white', border:'none', padding:'10px', margin:'100px'}}>Sign Up with Facebook</button> */}
+
+                <div class="wrapper">
+                <div className="SignupBox">
+                    <form onSubmit={this.handleSubmit} className="form">
+
+                        <h5 class="title"> SIGN UP </h5>
+
+                        <h1 class="heading"> Create your account</h1>
+                        <div class="subtitle"> <small> Lorem ipsum dolor sit amet, consectetur adipiscing elit  </small></div>
+
+                        <div class="signupbuttons">
+                            
+
+                            <button class="loginBtn loginBtn--facebook" onClick={this.checkLoginState}>
+                                Sign up with Facebook
+                    </button>
+                    
+                        </div>
+                        <center>OR</center>
+
+                        <div class="form-inputs">
+
+
+                            <input
+                                class="firstName"
+                                type="text"
+                                name="firstname"
+                                placeholder="First Name"
+                                value={this.state.firstname}
+                                onChange={this.handleChange}
+                            />
+
+                            <input
+                                class="lastName"
+                                type="text"
+                                name="lastname"
+                                placeholder="Last Name"
+                                value={this.state.lastname}
+                                onChange={this.handleChange}
+                            />
+
+                            <input
+                                class="email"
+                                type="email"
+                                name="email"
+                                placeholder="Email Address"
+                                value={this.state.email}
+                                onChange={this.handleChange}
+                            />
+
+                            <input
+                                class="password"
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                value={this.state.password}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+
+                        <div className="signUp">
+                            <small> By clicking Sign Up, you agree to our <a href=""> Terms of Use </a> and our <a href=""> Privacy Policy</a>.</small>
+                            <button type="submit">SIGN UP</button>
+                        </div>
+                    </form>
+                </div>
             </div>
+        </div>
         );
     }
 }
