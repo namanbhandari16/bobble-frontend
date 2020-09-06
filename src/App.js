@@ -11,7 +11,6 @@ function App() {
       <div >
       <Navbar />
       <Route exact path="/" component={SignUp} />
-      <Route exact path="/home" component={Home} />
       </div>
     </Router>
   );

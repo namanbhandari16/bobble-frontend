@@ -2,6 +2,7 @@ import React from 'react';
 import {Redirect} from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
 import './SignUp.css'
+import axios from 'axios'
 class SignUp extends React.Component{
      user ={
 
@@ -77,7 +78,19 @@ class SignUp extends React.Component{
     });
   
     }
-    
+    handleSubmit(){
+        console.log(this.state);
+        axios.post("https://reqres.in/api/register",{
+            email:this.state.email,
+            password:this.state.password
+          })
+          .then((res) => {
+            console.log(res)
+            if(res.token)
+            alert("User registered");
+            else alert("Error");
+          })
+    }
     render(){
         return(
             <div>
@@ -85,8 +98,8 @@ class SignUp extends React.Component{
 
                 <div class="wrapper">
                 <div className="SignupBox">
-                    <form onSubmit={this.handleSubmit} className="form">
-
+                    {/* <form onSubmit={this.handleSubmit} className="form" method="post"> */}
+                    
                         <h5 class="title"> SIGN UP </h5>
 
                         <h1 class="heading"> Create your account</h1>
@@ -101,7 +114,7 @@ class SignUp extends React.Component{
                     
                         </div>
                         <center>OR</center>
-
+                        <form className="form">
                         <div class="form-inputs">
 
 
@@ -144,7 +157,7 @@ class SignUp extends React.Component{
 
                         <div className="signUp">
                             <small> By clicking Sign Up, you agree to our <a href=""> Terms of Use </a> and our <a href=""> Privacy Policy</a>.</small>
-                            <button type="submit">SIGN UP</button>
+                            <button onClick={this.handleSubmit}>SIGN UP</button>
                         </div>
                     </form>
                 </div>
