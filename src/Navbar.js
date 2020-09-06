@@ -1,11 +1,10 @@
 import React from 'react';
-
+import heroku from './heroku-logo.png'
 class Navbar extends React.Component{
     render(){
         return (
-            <div>
-               {/* <img src="this.props.location.state.picture"  width="500" height="600" /> */}
-               Hello
+            <div max-height='10vh'>
+               <center><img src={heroku}  width="300" height="100" /></center>
 
             </div>
         );
