@@ -78,18 +78,29 @@ class SignUp extends React.Component{
     });
   
     }
-    handleSubmit(){
-        console.log(this.state);
-        axios.post("https://reqres.in/api/register",{
-            email:this.state.email,
-            password:this.state.password
-          })
-          .then((res) => {
-            console.log(res)
-            if(res.token)
-            alert("User registered");
-            else alert("Error");
-          })
+    handleSubmit(e){
+        e.preventDefault()
+        console.log(this.state)
+        axios.post('https://reqres.in/api/users',this.state)
+        .then(response=>{
+          console.log(response)
+          
+           this.setState({ 
+            fname:response.data.fname,
+            lname:response.data.lname,
+            email:response.data.email,
+            password: response.data.password,
+            status:response.status,
+            loggedInStatus:'logged in',
+            });
+            
+            console.log(this.state)
+            this.props.history.push("/dashboard")
+            
+        })
+        .catch(error=>{
+          console.log(error)
+        })
     }
     render(){
         return(
