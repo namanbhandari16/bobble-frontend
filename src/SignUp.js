@@ -4,9 +4,6 @@ import {useHistory} from 'react-router-dom';
 import './SignUp.css'
 import axios from 'axios'
 class SignUp extends React.Component{
-     user ={
-
-    }
     constructor(props) {
         super(props);
         this.state = {
@@ -17,6 +14,58 @@ class SignUp extends React.Component{
         this.facebookSDK = this.facebookSDK.bind(this);
         this.checkLoginState = this.checkLoginState.bind(this);
       }
+      resetForm() {
+        this.setState({
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: ''
+        })
+    }
+
+    onSubmithandler = (event) => {
+        event.preventDefault();
+        const { firstName, lastName, email, password } = this.state;
+
+        let templateParams = {
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            password: password
+        }
+
+        //Posting data on API
+
+        fetch("https://reqres.in/api/register", { //Using fetch method
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(templateParams)
+
+        }).then(result => result.json()).then(result => {
+            //Checking if the result has thrown an error or not
+            if (!result.error) {
+                alert(`Welcome, ${templateParams.first_name}! Your Id is ${result.id} and tokenNo is ${result.token}`)
+            } else {
+                alert(result.error);
+            }
+        });
+        //reseting the form after user clicks signup
+        this.resetForm()
+
+    }
+
+    //When the user types in the form, the changes will be displayed by changing
+    //the state 
+    handleChange = (event) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        })
+    }
+
     facebookSDK(){
        window.fbAsyncInit = function() {
             //console.log(this.FB);
@@ -58,26 +107,14 @@ class SignUp extends React.Component{
             last_name:res.last_name,
             pic:res.picture.data.url
         };
-        alert("User Logged in.\n Details in console.\nName: "+user.first_name+" "+user.last_name);
-        // return <Redirect to={{
-        //     pathname: "/home",
-        //     state: user
-        //   }}
-        // />
-        console.log('redirect');
-        return <Redirect to="/home" />
-        //this.props.history.push('/home');
-        // let history = useHistory();
-        // history.push({
-        //     pathname: '/home',
-        //     state: user
-        // });
+        alert("User Logged in.\n Details in console.\nName: "+user.first_name+" "+user.last_name)
         
     })}
         );
     });
   
     }
+    /*
     handleSubmit(e){
         e.preventDefault()
         console.log(this.state)
@@ -101,7 +138,8 @@ class SignUp extends React.Component{
         .catch(error=>{
           console.log(error)
         })
-    }
+    }*/
+
     render(){
         return(
             <div>
@@ -125,7 +163,7 @@ class SignUp extends React.Component{
                     
                         </div>
                         <center>OR</center>
-                        <form className="form">
+                        <form className="form" onSubmit={this.onSubmithandler}>
                         <div class="form-inputs">
 
 
